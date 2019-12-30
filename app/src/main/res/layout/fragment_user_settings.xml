@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsFragments.UserSettingsFragment"
+    android:background="#FFFFFF">
+
+
+    <ImageView
+        android:id="@+id/user_avatar"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="72dp"
+        android:contentDescription="@string/user_profile_picture"
+        android:src="@mipmap/ic_avatar_round"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/alegreya"
+        android:text="@string/username"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display3"
+        android:textColor="@color/colorAccent"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
+
+    <ScrollView
+        android:id="@+id/user_settings_scrollview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name">
+
+        <LinearLayout
+            android:id="@+id/user_settings_linearlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/change_profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableLeft="@drawable/ic_requests"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                android:onClick="changeProfilePicture"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/log_out"
+                android:textColor="@color/colorAccent" />
+
+            <Switch
+                android:id="@+id/allow_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableLeft="@drawable/ic_requests"
+                android:drawablePadding="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/turn_on_notifications"
+                android:textColor="@color/colorAccent" />
+
+            <Switch
+                android:id="@+id/allow_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableLeft="@drawable/ic_requests"
+                android:drawablePadding="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/allow_feedback_on_profile"
+                android:textColor="@color/colorAccent" />
+
+            <Switch
+                android:id="@+id/allow_anonymous_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableLeft="@drawable/ic_requests"
+                android:drawablePadding="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/allow_anonymous_feedback_on_profile"
+                android:textColor="@color/colorAccent" />
+
+
+            <TextView
+                android:id="@+id/user_log_off"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableLeft="@drawable/ic_requests"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                android:onClick="logOut"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/log_out"
+                android:textColor="@color/colorAccent" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
