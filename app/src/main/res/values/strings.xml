@@ -17,4 +17,5 @@
     <string name="friends">Friends</string>
     <string name="requests">Requests</string>
     <string name="search">Search</string>
+    <string name="change_profile_picture">Change Profile Photo</string>
 </resources>

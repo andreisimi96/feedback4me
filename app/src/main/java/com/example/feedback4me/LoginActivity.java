@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity
     private GoogleSignInClient googleSignInClient;
     private SignInButton googleSignInButton;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -48,9 +49,8 @@ public class LoginActivity extends AppCompatActivity
         passwordTextview = findViewById(R.id.edit_text_password);
 
         //google sign-in
-        String webClientId = "909133630679-f5jdkll5cfptf3baqfp0t8iq4hkorvim.apps.googleusercontent.com";
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(webClientId)
+                .requestIdToken(SensitiveInfo.getWebClientId())
                 .requestEmail()
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
