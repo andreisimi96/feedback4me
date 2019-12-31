@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/login_layout"
     tools:context=".LoginActivity">
 
 
@@ -46,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
 
     <EditText
-        android:id="@+id/edit_text_email"
+        android:id="@+id/edit_text_email_signin"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -61,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_apptitle" />
 
     <EditText
-        android:id="@+id/edit_text_password"
+        android:id="@+id/edit_text_password_signin"
         android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -72,7 +73,7 @@
         android:textColorLink="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_email_signin" />
 
     <Button
         android:id="@+id/login_button"
@@ -81,7 +82,7 @@
         android:text="@string/login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_password_signin"
         android:onClick="signInWithEmail"/>
 
     <TextView
@@ -113,6 +114,7 @@
         android:text="@string/sign_up_here"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
+        android:onClick="openSignUpFragment"
         app:layout_constraintStart_toEndOf="@+id/text_noaccount"
         app:layout_constraintTop_toBottomOf="@+id/login_button" />
 

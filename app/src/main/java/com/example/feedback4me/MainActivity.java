@@ -7,11 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.feedback4me.NavigationFragments.FriendsFragment;
 import com.example.feedback4me.NavigationFragments.HomeFragment;
 import com.example.feedback4me.NavigationFragments.RequestsFragment;
@@ -22,6 +28,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -29,6 +38,8 @@ public class MainActivity extends AppCompatActivity
 
     BottomNavigationView bottomNavigation;
     BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationListener;
+
+    ImageView user_avatar;
 
     //navigation fragments;
     HomeFragment homeFragment;
@@ -46,6 +57,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        user_avatar = findViewById(R.id.user_avatar_toolbar);
+
         //setup navigation bar and listener
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigationListener = createBottomNavigationListener();
@@ -57,13 +70,14 @@ public class MainActivity extends AppCompatActivity
         requestsFragment = RequestsFragment.newInstance();
         searchFragment = SearchFragment.newInstance();
 
+        //setup toolbar & profile picture
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setProfilePictureInToolbar();
 
         //start home fragment
         openNavigationFragment(homeFragment);
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener createBottomNavigationListener ()
     {
@@ -159,11 +173,21 @@ public class MainActivity extends AppCompatActivity
 
     public void changeProfilePicture(View view)
     {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null)
-        {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
 
     }
+
+    private void setProfilePictureInToolbar()
+    {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null)
+        {
+            Uri photoUrl = user.getPhotoUrl();
+            Log.d("COME ON", "ceva e in neregula");
+            Glide.with(MainActivity.this)
+                    .load(photoUrl)
+                    .circleCrop()
+                    .into(user_avatar);
+        }
+    }
+
 }

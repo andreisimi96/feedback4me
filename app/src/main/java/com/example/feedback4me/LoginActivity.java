@@ -2,6 +2,7 @@ package com.example.feedback4me;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.feedback4me.LoginFragments.SignUpFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,8 +47,8 @@ public class LoginActivity extends AppCompatActivity
         setContentView(R.layout.activity_login);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        emailTextview = findViewById(R.id.edit_text_email);
-        passwordTextview = findViewById(R.id.edit_text_password);
+        emailTextview = findViewById(R.id.edit_text_email_signin);
+        passwordTextview = findViewById(R.id.edit_text_password_signin);
 
         //google sign-in
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -188,5 +190,14 @@ public class LoginActivity extends AppCompatActivity
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
+    }
+
+    public void openSignUpFragment(View view)
+    {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        transaction.replace(R.id.login_layout, SignUpFragment.newInstance());
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
