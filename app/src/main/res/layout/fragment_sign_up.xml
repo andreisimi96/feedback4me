@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:elevation="2dp"
-    tools:context=".LoginFragments.SignUpFragment">
+    tools:context=".UserFragments.SignUpFragment">
 
     <EditText
         android:id="@+id/edit_text_password_signup"
@@ -20,7 +20,7 @@
         android:textColorLink="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_email_signup" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_username_signup" />
 
     <EditText
         android:id="@+id/edit_text_email_signup"
@@ -34,9 +34,22 @@
         android:textColor="@color/colorAccent"
         android:textColorLink="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signup_title" />
+
+    <EditText
+        android:id="@+id/edit_text_username_signup"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/full_name"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/colorAccent"
+        android:textColorLink="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_email_signup" />
 
     <TextView
         android:id="@+id/signup_title"
@@ -57,7 +70,21 @@
         android:layout_height="wrap_content"
         android:text="@string/sign_up"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_birthdate_signup" />
+
+    <EditText
+        android:id="@+id/edit_text_birthdate_signup"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/birth_date"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:focusableInTouchMode="true"
+        android:cursorVisible="false"
+        android:focusable="false"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_password_signup" />
 

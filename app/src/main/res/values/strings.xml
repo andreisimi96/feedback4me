@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">feedback4me</string>
     <string name="feedback4me_logo">feedback4me logo</string>
-    <string name="email">email</string>
-    <string name="password">password</string>
-    <string name="login">login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
     <string name="no_account">No account?</string>
     <string name="sign_up_here">Sign up here!</string>
     <string name="or">OR</string>
     <string name="username">Username</string>
+    <string name="full_name">Full Name</string>
     <string name="user_profile_picture">User Profile Picture</string>
     <string name="turn_on_notifications">Turn On Notifications</string>
     <string name="allow_feedback_on_profile">Allow Feedback on Profile</string>
@@ -21,4 +22,5 @@
 
     <string name="sign_up_form">Sign Up Form</string>
     <string name="sign_up">Sign Up!</string>
+    <string name="birth_date">Birth Date</string>
 </resources>

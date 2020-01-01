@@ -1,4 +1,4 @@
-package com.example.feedback4me.SettingsFragments;
+package com.example.feedback4me.UserFragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
+import com.example.feedback4me.Tools.GlideWrapper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -65,11 +65,7 @@ public class UserSettingsFragment extends Fragment
 
             user_name.setText(name);
             user_email.setText(email);
-
-            Glide.with(this)
-                    .load(photoUrl)
-                    .circleCrop()
-                    .into(user_avatar);
+            GlideWrapper.setAvatarFromUri(getActivity(), photoUrl, user_avatar);
 
         }
         else

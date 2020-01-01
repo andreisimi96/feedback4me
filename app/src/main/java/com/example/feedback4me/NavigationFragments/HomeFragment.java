@@ -1,9 +1,6 @@
 package com.example.feedback4me.NavigationFragments;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,10 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.feedback4me.LoginActivity;
-import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.R;
+import com.example.feedback4me.Tools.GlideWrapper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -70,11 +66,7 @@ public class HomeFragment extends Fragment
             user_name.setText(name);
             user_email.setText(email);
 
-            Glide.with(this)
-                    .load(photoUrl)
-                    .circleCrop()
-                    .into(user_avatar);
-
+            GlideWrapper.setAvatarFromUri(getActivity(), photoUrl, user_avatar);
         }
         else
         {
