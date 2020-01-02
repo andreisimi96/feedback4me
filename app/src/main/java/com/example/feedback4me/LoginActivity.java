@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.feedback4me.UserFragments.SignUpFragment;
+import com.example.feedback4me.UserInformation.User;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,6 +28,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class LoginActivity extends AppCompatActivity
@@ -167,8 +173,13 @@ public class LoginActivity extends AppCompatActivity
                         {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = firebaseAuth.getCurrentUser();
-                            updateUI(user);
+
+                            boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
+
+                            //TODO: Add entry when user is new via google
+
+                            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            updateUI(firebaseUser);
                         }
                         else
                         {
@@ -179,7 +190,6 @@ public class LoginActivity extends AppCompatActivity
                         }
                     }
                 });
-
     }
 
     public void updateUI(FirebaseUser currentUser)

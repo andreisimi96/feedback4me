@@ -17,4 +17,5 @@
         <item name="android:activityCloseExitAnimation">@anim/fade_out</item>
     </style>
 
+
 </resources>

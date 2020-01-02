@@ -3,10 +3,10 @@ package com.example.feedback4me;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,10 +17,9 @@ import com.example.feedback4me.NavigationFragments.FriendsFragment;
 import com.example.feedback4me.NavigationFragments.HomeFragment;
 import com.example.feedback4me.NavigationFragments.RequestsFragment;
 import com.example.feedback4me.NavigationFragments.SearchFragment;
+import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
 import com.example.feedback4me.UserFragments.UserSettingsFragment;
 import com.example.feedback4me.Tools.GlideWrapper;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    public void openUserFragment(View view)
+    public void openUserSettingsFragment(View view)
     {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -152,22 +151,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void logOut(View view)
-    {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
-        GoogleSignIn.getClient(
-                MainActivity.this,
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-        ).signOut();
-
-    }
-
-    public void changeProfilePicture(View view)
-    {
-
-    }
 
     private void setProfilePictureInToolbar()
     {
@@ -178,5 +161,4 @@ public class MainActivity extends AppCompatActivity
             GlideWrapper.setAvatarFromUri(this, photoUrl, user_avatar);
         }
     }
-
 }

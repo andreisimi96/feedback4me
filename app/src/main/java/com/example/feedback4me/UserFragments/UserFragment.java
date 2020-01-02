@@ -1,14 +1,8 @@
-package com.example.feedback4me.NavigationFragments;
+package com.example.feedback4me.UserFragments;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +10,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.GlideWrapper;
-import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class HomeFragment extends Fragment
+public class UserFragment extends Fragment
 {
-    private RecyclerView recyclerView;
-    private LinearLayoutManager linearLayoutManager;
-    private FirebaseRecyclerAdapter adapter;
 
-    public HomeFragment() {}
+    public UserFragment() {}
 
-    public static HomeFragment newInstance()
+    public static UserFragment newInstance()
     {
-        HomeFragment fragment = new HomeFragment();
+        UserFragment fragment = new UserFragment();
         return fragment;
     }
 
@@ -49,7 +40,7 @@ public class HomeFragment extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_user, container, false);
         fillWithFirebaseData(rootView);
         attachClickHandlers(rootView);
 
@@ -86,11 +77,8 @@ public class HomeFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                // Create the fragment and show it as a dialog.
-                DialogFragment newFragment = FeedbackDialogFragment.newInstance();
-                newFragment.show(getFragmentManager(), "dialog");
+                
             }
         });
     }
-
 }

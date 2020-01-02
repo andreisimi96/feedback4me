@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/feedback_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="@string/enter_feedback_for_user"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/feedback_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:switchPadding="16dp"
+        android:text="@string/anonymous"
+        android:textColor="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_dialog_title" />
+
+    <RadioGroup
+        android:id="@+id/feedback_impression"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:orientation="vertical"
+        android:checkedButton="@+id/radio_neutral"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_type">
+
+        <RadioButton
+            android:id="@+id/radio_negative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/negative"
+            android:textColor="@color/colorAccent" />
+
+        <RadioButton
+            android:id="@+id/radio_neutral"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/neutral"
+            android:textColor="@color/colorAccent" />
+
+        <RadioButton
+            android:id="@+id/radio_positive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/positive"
+            android:textColor="@color/colorAccent" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/feedback_enter_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:hint="@string/enter_feedback_for_user"
+        android:inputType="textLongMessage|textMultiLine"
+        android:textSize="18sp"
+        android:maxLines="7"
+        android:maxLength="200"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/feedback_impression" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,8 +19,18 @@
     <string name="requests">Requests</string>
     <string name="search">Search</string>
     <string name="change_profile_picture">Change Profile Photo</string>
-
     <string name="sign_up_form">Sign Up Form</string>
     <string name="sign_up">Sign Up!</string>
     <string name="birth_date">Birth Date</string>
+    <string name="user_avatar">User Avatar</string>
+    <string name="enter_feedback_for_user">Enter your feedback for user</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="enter_your_feedback">Enter your feedback</string>
+    <string name="negative">Negative</string>
+    <string name="neutral">Neutral</string>
+    <string name="positive">Positive</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="write_feedback">Write Feedback</string>
 </resources>

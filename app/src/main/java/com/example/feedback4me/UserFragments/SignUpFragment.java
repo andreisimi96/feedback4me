@@ -7,6 +7,7 @@ import java.util.Map;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,8 @@ import android.widget.Toast;
 
 import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.R;
+import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.UserInformation.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -114,67 +117,16 @@ public class SignUpFragment extends Fragment
         }
         else
         {
-            final ProgressDialog progress = new ProgressDialog(getContext());
-            progress.setTitle("Loading");
-            progress.setMessage("Configuring your account...");
-            progress.setCancelable(false);
-            progress.show();
-
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task)
-                        {
-                            if (!task.isSuccessful())
-                            {
-                                Toast.makeText(getContext(), "ERROR",Toast.LENGTH_LONG).show();
-                                progress.dismiss();
-                            }
-                            else
-                            {
-                                //get current user
-                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(fullname)
-                                        .build();
-                                firebaseUser.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>()
-                                {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task)
-                                    {
-                                        /*
-                                          Add user specific folder to firebase.
-                                        */
-                                        User user = new User(fullname, email, birthdate);
-                                        DatabaseReference usersDbReference = database.getReference();
-                                        String userUID = firebaseAuth.getCurrentUser().getUid();
-                                        usersDbReference = usersDbReference.child("users/" + userUID);
-
-                                        Map<String, User> userData = new HashMap<>();
-                                        userData.put("User Data", user);
-                                        usersDbReference.setValue(userData);
-
-                                        progress.dismiss();
-                                        startActivity(new Intent(getContext(), MainActivity.class));
-
-                                    }
-                                });
-
-                            }
-                        }
-                    });
+            FirebaseWrapper.createUserWithEmailAndPassword(this, email, password, fullname, birthdate);
         }
     }
 
     public void datePick(View rootView)
     {
         final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+        final int month = calendar.get(Calendar.MONTH);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
 
         final EditText birthdateEditText = rootView.findViewById(R.id.edit_text_birthdate_signup);
 
@@ -183,11 +135,18 @@ public class SignUpFragment extends Fragment
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onDateSet(DatePicker view, int year,
+                    public void onDateSet(DatePicker view, int yearDatePicker,
                                           int monthOfYear, int dayOfMonth) {
 
-                        birthdateEditText.setText(dayOfMonth + "-"
-                                + (monthOfYear + 1) + "-" + year);
+                        if (yearDatePicker >= year - 16)
+                        {
+                            Toast.makeText(getContext(), "The birthdate does not respect our terms and conditions.", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            birthdateEditText.setText(dayOfMonth + "-"
+                                    + (monthOfYear + 1) + "-" + yearDatePicker);
+                        }
                     }
                 }, year, month, day);
         dpd.show();

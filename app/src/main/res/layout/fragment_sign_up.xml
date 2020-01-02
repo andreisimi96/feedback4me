@@ -44,7 +44,7 @@
         android:ems="10"
         android:hint="@string/full_name"
         android:importantForAutofill="no"
-        android:inputType="textEmailAddress"
+        android:inputType="textPersonName"
         android:textColor="@color/colorAccent"
         android:textColorLink="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
