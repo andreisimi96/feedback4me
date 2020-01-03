@@ -1,16 +1,10 @@
 package com.example.feedback4me.UserFragments;
 
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -21,18 +15,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.UserInformation.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpFragment extends Fragment
 {

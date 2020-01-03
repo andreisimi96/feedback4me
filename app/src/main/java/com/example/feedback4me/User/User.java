@@ -1,4 +1,4 @@
-package com.example.feedback4me.UserInformation;
+package com.example.feedback4me.User;
 
 import android.net.Uri;
 

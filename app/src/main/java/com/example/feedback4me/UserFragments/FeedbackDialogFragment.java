@@ -13,12 +13,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.Toast;
 
-import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.UserInformation.Feedback;
+import com.example.feedback4me.User.Feedback;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
@@ -78,7 +76,7 @@ public class FeedbackDialogFragment extends DialogFragment
 
     public void sendFeedbackToFirebase(View view, String userUid)
     {
-        Switch feedbackTypeSwitch = view.findViewById(R.id.feedback_type);
+        Switch anonymousSwitch = view.findViewById(R.id.feedback_type);
 
         RadioGroup radioGroup = view.findViewById(R.id.feedback_impression);
         int radioButtonID = radioGroup.getCheckedRadioButtonId();
@@ -90,12 +88,21 @@ public class FeedbackDialogFragment extends DialogFragment
 
         //create feedback object
         Feedback feedback = new Feedback();
-        feedback.anonymous = feedbackTypeSwitch.isChecked();
         feedback.impression = radioButton.getText().toString();
         feedback.text = enteredFeedback.getText().toString();
-        feedback.authorUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        feedback.date = Calendar.getInstance().getTime();
 
+        //anonymous feedback
+        if (anonymousSwitch.isChecked())
+        {
+            feedback.author = "Anonymous";
+            feedback.authorUid = "Anonymous";
+        }
+        else
+        {
+            feedback.author = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            feedback.authorUid = FirebaseAuth.getInstance().getUid();
+        }
+        feedback.date = Calendar.getInstance().getTime();
         FirebaseWrapper.sendFeedbackToFirebase(this, feedback, userUid);
     }
 }

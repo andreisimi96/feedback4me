@@ -1,14 +1,13 @@
-package com.example.feedback4me.UserInformation;
+package com.example.feedback4me.User;
 
 import java.util.Date;
-import java.util.Objects;
 
 public class Feedback
 {
+    public String author;
     public String authorUid;
     public String text;
     //positive, negative or neutral
     public String impression;
     public Date date;
-    public boolean anonymous;
 }

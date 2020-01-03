@@ -61,7 +61,7 @@ public class UserFragment extends Fragment
 
             user_name.setText(name);
 
-            GlideWrapper.setAvatarFromUri(getActivity(), photoUrl, user_avatar);
+            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, user_avatar);
         }
         else
         {

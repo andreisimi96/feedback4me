@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
+import com.example.feedback4me.Tools.FirebaseWrapper;
 import com.example.feedback4me.Tools.GlideWrapper;
 import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -28,7 +29,7 @@ public class HomeFragment extends Fragment
 {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private FirebaseRecyclerAdapter adapter;
+    private FirebaseRecyclerAdapter recyclerAdapter;
 
     public HomeFragment() {}
 
@@ -53,7 +54,29 @@ public class HomeFragment extends Fragment
         fillWithFirebaseData(rootView);
         attachClickHandlers(rootView);
 
+        recyclerView = rootView.findViewById(R.id.feedback_recyclerview);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(false);
+
+        //recylerAdapter
+        recyclerAdapter = FirebaseWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
+
         return rootView;
+    }
+
+    public void onStart()
+    {
+        super.onStart();
+        recyclerAdapter.startListening();
+    }
+
+    public void onStop()
+    {
+        super.onStop();
+        recyclerAdapter.stopListening();
     }
 
     public void fillWithFirebaseData(View rootView)
@@ -70,12 +93,13 @@ public class HomeFragment extends Fragment
 
             user_name.setText(name);
 
-            GlideWrapper.setAvatarFromUri(getActivity(), photoUrl, user_avatar);
+            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, user_avatar);
         }
         else
         {
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }
+
     }
 
     public void attachClickHandlers(View rootView)

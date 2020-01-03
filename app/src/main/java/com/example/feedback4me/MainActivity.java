@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity
         if (user != null)
         {
             Uri photoUrl = user.getPhotoUrl();
-            GlideWrapper.setAvatarFromUri(this, photoUrl, user_avatar);
+            GlideWrapper.setAvatarFromUri(getApplicationContext(), photoUrl, user_avatar);
         }
     }
 }
