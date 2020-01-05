@@ -1,7 +1,6 @@
 package com.example.feedback4me.UserFragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,12 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.Tools.GlideWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,7 +58,7 @@ public class UserSettingsFragment extends Fragment
                 Uri newAvatarUri = data.getData();
                 if (newAvatarUri != null)
                 {
-                    FirebaseWrapper.changeUserAvatar(this, newAvatarUri);
+                    FirebaseRequestsWrapper.changeUserAvatar(this, newAvatarUri);
                 }
             }
         }
@@ -84,7 +81,7 @@ public class UserSettingsFragment extends Fragment
             userName.setText(name);
             userEmail.setText(email);
 
-            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
+            FirebaseRequestsWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
         else
         {

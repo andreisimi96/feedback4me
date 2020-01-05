@@ -1,7 +1,5 @@
 package com.example.feedback4me.NavigationFragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,7 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -50,22 +49,15 @@ public class FriendsFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        //recylerAdapter
-        recyclerAdapter = FirebaseWrapper.getFriendsFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
+        recyclerAdapter = FirebaseAdaptersWrapper.getFriendsFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
+        recyclerAdapter.startListening();
 
-        // Inflate the layout for this fragment
         return rootView;
     }
 
-    public void onStart()
+    public void onDestroy()
     {
-        super.onStart();
-        recyclerAdapter.startListening();
-    }
-
-    public void onStop()
-    {
-        super.onStop();
+        super.onDestroy();
         recyclerAdapter.stopListening();
     }
 }

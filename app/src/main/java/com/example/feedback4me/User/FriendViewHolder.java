@@ -1,6 +1,5 @@
 package com.example.feedback4me.User;
 
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,17 +9,12 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.Tools.GlideWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class FriendViewHolder extends RecyclerView.ViewHolder
 {
@@ -40,6 +34,8 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
         username = itemView.findViewById(R.id.list_username);
         birthDate = itemView.findViewById(R.id.list_birth_date);
         anonymousImage = itemView.findViewById(R.id.list_anonymous_photo);
+
+
     }
 
     public void setFriendUid(String friendUid)
@@ -67,7 +63,7 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
                 {
                     anonymousImage.setVisibility(View.VISIBLE);
                 }
-                FirebaseWrapper.asyncSetAvatar(friendUid, friendImage);
+                FirebaseRequestsWrapper.asyncSetAvatar(friendUid, friendImage);
 
                 /*
                 TODO go to User Page
@@ -82,6 +78,9 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
                 // ...
             }
         };
+
+
+
         dbReference.addValueEventListener(postListener);
     }
 }

@@ -1,7 +1,6 @@
 package com.example.feedback4me.NavigationFragments;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -18,8 +17,8 @@ import android.widget.TextView;
 
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.Tools.GlideWrapper;
+import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,8 +60,7 @@ public class HomeFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        //recylerAdapter
-        recyclerAdapter = FirebaseWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
+        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
         recyclerAdapter.startListening();
 
         return rootView;
@@ -88,7 +86,7 @@ public class HomeFragment extends Fragment
             String name = user.getDisplayName();
 
             userName.setText(name);
-            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
+            FirebaseRequestsWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
         else
         {

@@ -1,6 +1,5 @@
 package com.example.feedback4me.User;
 
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,17 +10,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
-import com.example.feedback4me.Tools.GlideWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class UserSearchViewHolder extends RecyclerView.ViewHolder
 {
@@ -42,21 +38,13 @@ public class UserSearchViewHolder extends RecyclerView.ViewHolder
         username = itemView.findViewById(R.id.list_username);
         birthDate = itemView.findViewById(R.id.list_birth_date);
 
-        addFriend.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-
-            }
-        });
-
     }
 
     public void setUserUid(String userUid) {this.userUid = userUid;}
 
     public void fillUserSearchViewHolder()
     {
+        final FirebaseUser loggedInUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String userDataPath = "users/" + userUid + "/User Data/";
         dbReference = FirebaseDatabase.getInstance()
@@ -72,7 +60,18 @@ public class UserSearchViewHolder extends RecyclerView.ViewHolder
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.fullname);
                 birthDate.setText(user.birthdate);
-                FirebaseWrapper.asyncSetAvatar(userUid, userImage);
+                FirebaseRequestsWrapper.asyncSetAvatar(userUid, userImage);
+
+                //are friends?
+                boolean areFriends = user.friends != null && user.friends.containsValue(loggedInUser.getUid());
+                boolean alreadySent = user.requests != null && user.requests.containsValue(loggedInUser.getUid());
+                boolean sameUser = loggedInUser.getUid().equals(userUid);
+
+                if (areFriends || alreadySent || sameUser)
+                {
+                    addFriend.setVisibility(View.GONE);
+                }
+
 
                 /*
                 TODO
@@ -87,6 +86,16 @@ public class UserSearchViewHolder extends RecyclerView.ViewHolder
                 // ...
             }
         };
+
+        addFriend.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                FirebaseRequestsWrapper.sendFriendRequest(loggedInUser.getUid(), userUid);
+            }
+        });
+
         dbReference.addValueEventListener(postListener);
     }
 }

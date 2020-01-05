@@ -15,7 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.example.feedback4me.User.Feedback;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -103,6 +103,6 @@ public class FeedbackDialogFragment extends DialogFragment
             feedback.authorUid = FirebaseAuth.getInstance().getUid();
         }
         feedback.date = Calendar.getInstance().getTime();
-        FirebaseWrapper.sendFeedbackToFirebase(this, feedback, userUid);
+        FirebaseRequestsWrapper.sendFeedbackToFirebase(this, feedback, userUid);
     }
 }

@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpFragment extends Fragment
@@ -102,7 +102,7 @@ public class SignUpFragment extends Fragment
         }
         else
         {
-            FirebaseWrapper.createUserWithEmailAndPassword(this, email, password, fullname, birthdate);
+            FirebaseRequestsWrapper.createUserWithEmailAndPassword(this, email, password, fullname, birthdate);
         }
     }
 

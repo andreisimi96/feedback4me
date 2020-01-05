@@ -3,6 +3,7 @@ package com.example.feedback4me.User;
 import android.net.Uri;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User
 {
@@ -11,9 +12,9 @@ public class User
     public String uid;
     public String fullname;
     public String email;
-    public ArrayList<String> friends;
-    public ArrayList<String> groups;
-    public ArrayList<String> pendingRequests;
+    public HashMap<String, String> friends;
+    public HashMap<String, String> groups;
+    public HashMap<String, String> requests;
     public boolean allowsAnonymousFeedback;
 
     public User() {}
@@ -26,10 +27,9 @@ public class User
         this.email = email;
         this.birthdate = birthdate;
         this.uid = uid;
-        friends = new ArrayList<>();
-        friends.add(uid);
-        groups = new ArrayList<>();
-        pendingRequests = new ArrayList<>();
+        friends = new HashMap<>();
+        groups = new HashMap<>();
+        requests = new HashMap<>();
         allowsAnonymousFeedback = true;
         this.avatarUri = avatarUri;
     }

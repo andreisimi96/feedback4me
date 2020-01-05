@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +15,8 @@ import com.example.feedback4me.NavigationFragments.FriendsFragment;
 import com.example.feedback4me.NavigationFragments.HomeFragment;
 import com.example.feedback4me.NavigationFragments.RequestsFragment;
 import com.example.feedback4me.NavigationFragments.SearchFragment;
-import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.example.feedback4me.UserFragments.UserSettingsFragment;
-import com.example.feedback4me.Tools.GlideWrapper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -157,7 +155,7 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
-            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
+            FirebaseRequestsWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
     }
 }

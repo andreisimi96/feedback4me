@@ -1,7 +1,5 @@
 package com.example.feedback4me.NavigationFragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,16 +12,14 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.feedback4me.R;
-import com.example.feedback4me.Tools.FirebaseWrapper;
+import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
 
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener
 {
     private RecyclerView recyclerView;
     private FirebaseRecyclerAdapter recyclerAdapter;
-    private SearchView userSearchview;
 
     public SearchFragment() {}
 
@@ -46,7 +42,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        userSearchview = rootView.findViewById(R.id.user_searchview);
+        SearchView userSearchview = rootView.findViewById(R.id.user_searchview);
         userSearchview.setOnQueryTextListener(this);
 
         recyclerView = rootView.findViewById(R.id.user_recyclerview);
@@ -56,7 +52,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, "");
+        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, "");
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.startListening();
 
@@ -74,7 +70,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextChange(String newText)
     {
         recyclerAdapter.stopListening();
-        recyclerAdapter = FirebaseWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, newText);
+        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, newText);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.startListening();
         return false;
