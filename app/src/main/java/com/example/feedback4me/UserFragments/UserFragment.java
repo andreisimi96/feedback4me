@@ -49,9 +49,12 @@ public class UserFragment extends Fragment
 
     public void fillWithFirebaseData(View rootView)
     {
-        ImageView user_avatar = rootView.findViewById(R.id.user_avatar_home);
-        TextView user_name = rootView.findViewById(R.id.user_name_home);
+        ImageView userAvatar = rootView.findViewById(R.id.user_avatar_home);
+        TextView userName = rootView.findViewById(R.id.user_name_home);
 
+        /*
+         TODO Make real one, not placeholder
+         */
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
@@ -59,9 +62,9 @@ public class UserFragment extends Fragment
             String name = user.getDisplayName();
             Uri photoUrl = user.getPhotoUrl();
 
-            user_name.setText(name);
+            userName.setText(name);
 
-            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, user_avatar);
+            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, userAvatar);
         }
         else
         {

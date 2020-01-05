@@ -3,7 +3,6 @@ package com.example.feedback4me;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,7 +16,7 @@ import com.example.feedback4me.NavigationFragments.FriendsFragment;
 import com.example.feedback4me.NavigationFragments.HomeFragment;
 import com.example.feedback4me.NavigationFragments.RequestsFragment;
 import com.example.feedback4me.NavigationFragments.SearchFragment;
-import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
+import com.example.feedback4me.Tools.FirebaseWrapper;
 import com.example.feedback4me.UserFragments.UserSettingsFragment;
 import com.example.feedback4me.Tools.GlideWrapper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     BottomNavigationView bottomNavigation;
     BottomNavigationView.OnNavigationItemSelectedListener bottomNavigationListener;
 
-    ImageView user_avatar;
+    ImageView userAvatar;
 
     //navigation fragments;
     HomeFragment homeFragment;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        user_avatar = findViewById(R.id.user_avatar_toolbar);
+        userAvatar = findViewById(R.id.user_avatar_toolbar);
 
         //setup navigation bar and listener
         bottomNavigation = findViewById(R.id.bottom_navigation);
@@ -101,6 +100,7 @@ public class MainActivity extends AppCompatActivity
     {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.main_frame, fragment);
+
         if (firstActivity)
         {
             firstActivity = false;
@@ -157,8 +157,7 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
-            Uri photoUrl = user.getPhotoUrl();
-            GlideWrapper.setAvatarFromUri(getApplicationContext(), photoUrl, user_avatar);
+            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
     }
 }

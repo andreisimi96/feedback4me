@@ -26,31 +26,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Author"
+            android:layout_marginTop="8dp"
+            android:text="@string/username"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/list_username_photo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/list_feedback_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Feedback text"
-            android:textColor="@color/colorAccent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/list_username_photo" />
+            app:layout_constraintTop_toTopOf="@+id/list_username_photo" />
 
         <ImageView
             android:id="@+id/list_username_photo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="Author Photo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/username_photo"
             android:src="@drawable/ic_avatar_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,9 +49,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:text="Date"
+            android:text="@string/birth_date"
+            app:layout_constraintBottom_toBottomOf="@+id/list_username_photo"
             app:layout_constraintStart_toEndOf="@+id/list_username_photo"
             app:layout_constraintTop_toBottomOf="@+id/list_username" />
+
+        <Button
+            android:id="@+id/add_friend_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Friend"
+            android:textSize="10sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -63,37 +63,32 @@ public class HomeFragment extends Fragment
 
         //recylerAdapter
         recyclerAdapter = FirebaseWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
+        recyclerAdapter.startListening();
 
         return rootView;
     }
 
-    public void onStart()
+    @Override
+    public void onDestroy()
     {
-        super.onStart();
-        recyclerAdapter.startListening();
-    }
-
-    public void onStop()
-    {
-        super.onStop();
+        super.onDestroy();
         recyclerAdapter.stopListening();
+
     }
 
     public void fillWithFirebaseData(View rootView)
     {
-        ImageView user_avatar = rootView.findViewById(R.id.user_avatar_home);
-        TextView user_name = rootView.findViewById(R.id.user_name_home);
+        ImageView userAvatar = rootView.findViewById(R.id.user_avatar_home);
+        TextView userName = rootView.findViewById(R.id.user_name_home);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
         {
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
-            Uri photoUrl = user.getPhotoUrl();
 
-            user_name.setText(name);
-
-            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, user_avatar);
+            userName.setText(name);
+            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
         else
         {

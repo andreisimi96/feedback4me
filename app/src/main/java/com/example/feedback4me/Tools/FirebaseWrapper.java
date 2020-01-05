@@ -2,12 +2,12 @@ package com.example.feedback4me.Tools;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +18,9 @@ import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.User.Feedback;
 import com.example.feedback4me.User.FeedbackViewHolder;
+import com.example.feedback4me.User.FriendViewHolder;
 import com.example.feedback4me.User.User;
+import com.example.feedback4me.User.UserSearchViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
@@ -31,14 +33,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,11 +55,8 @@ public class FirebaseWrapper
                                                       final String fullname,
                                                       final String birthdate)
     {
-        final ProgressDialog progress = new ProgressDialog(callingFragment.getContext());
-        progress.setTitle("Loading");
-        progress.setMessage("Configuring your account...");
-        progress.setCancelable(false);
-        progress.show();
+        final ProgressDialog progress = UI.createProgressDialog(callingFragment.getContext(),
+                                                "Loading", "Configuring your account...", false);
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(email, password)
@@ -73,8 +73,8 @@ public class FirebaseWrapper
                         else
                         {
                             //get current user & db
-                            final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                            final String userUid = firebaseAuth.getCurrentUser().getUid();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(fullname)
@@ -87,8 +87,7 @@ public class FirebaseWrapper
                                     /*
                                         Add user specific folder to firebase.
                                     */
-                                    DatabaseReference usersDbReference = database.getReference();
-                                    String userUid = firebaseAuth.getCurrentUser().getUid();
+                                    DatabaseReference usersDbReference = FirebaseDatabase.getInstance().getReference();
                                     Uri avatarUri = firebaseUser.getPhotoUrl();
                                     User user = new User(fullname, email, birthdate, userUid, avatarUri);
                                     usersDbReference = usersDbReference.child("users/" + userUid);
@@ -108,21 +107,22 @@ public class FirebaseWrapper
                 });
     }
 
+    public static void createUserDBForGoogleSignin(final Fragment callingFragment)
+    {
+        /*
+        TODO
+         */
+    }
+
     public static void changeUserAvatar(final Fragment callingFragment, final Uri newAvatarUri)
     {
-        final ProgressDialog progress = new ProgressDialog(callingFragment.getContext());
-        progress.setTitle("Loading");
-        progress.setMessage("Adding profile picture...");
-        progress.setCancelable(false);
-        progress.show();
+        final ProgressDialog progress = UI.createProgressDialog(callingFragment.getContext(),
+                                        "Loading", "Adding profile picture...", false);
 
-        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        String userUid = firebaseAuth.getUid();
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        final String userUid = firebaseUser.getUid();
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference photoRef = storageRef.child(userUid);
+        StorageReference photoRef = FirebaseStorage.getInstance().getReference().child(userUid);
 
         UploadTask uploadTask = photoRef.putFile(newAvatarUri);
         uploadTask.addOnFailureListener(new OnFailureListener()
@@ -151,10 +151,16 @@ public class FirebaseWrapper
                             {
                                 if (task.isSuccessful())
                                 {
+                                    String photoUrl = firebaseUser.getPhotoUrl().toString();
+                                    DatabaseReference avatarReference = FirebaseDatabase.getInstance()
+                                                                        .getReference()
+                                                                        .child("users/" + userUid + "/User Data/avatarUid");
+                                    avatarReference.setValue(photoUrl);
                                     progress.dismiss();
                                 }
                             }
                         });
+
             }
         });
 
@@ -192,29 +198,7 @@ public class FirebaseWrapper
                             @Override
                             public Feedback parseSnapshot(@NonNull DataSnapshot snapshot)
                             {
-                               Feedback feedback = new Feedback();
-
-                               Object authorObj = snapshot.child("author").getValue();
-                               Object textObj = snapshot.child("text").getValue();
-                               Object impressionObj = snapshot.child("impression").getValue();
-                               Object dateObj = snapshot.child("date/time").getValue();
-                               Object authorUidObj = snapshot.child("authorUid").getValue();
-
-                               //return default if one is null
-                               if (authorObj == null ||
-                                    textObj == null || impressionObj == null ||
-                                    dateObj == null || authorUidObj == null)
-                               {
-                                   return feedback;
-                               }
-
-                               feedback.author = authorObj.toString();
-                               feedback.text = textObj.toString();
-                               feedback.impression = impressionObj.toString();
-                               long epochTimeMs = Long.parseLong(dateObj.toString());
-                               feedback.date = new Date(epochTimeMs);
-                               feedback.authorUid = authorUidObj.toString();
-
+                               Feedback feedback = getFeedbackFromSnapshot(snapshot);
                                return feedback;
                             }
                         })
@@ -245,19 +229,13 @@ public class FirebaseWrapper
                 StorageReference storageRef = storage.getReference();
                 StorageReference photoRef = storageRef.child(feedback.authorUid);
 
+                //Set image
                 photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
                 {
                     @Override
                     public void onSuccess(Uri uri)
                     {
                         holder.setAuthorImage(uri);
-                    }
-                }).addOnFailureListener(new OnFailureListener()
-                {
-                    @Override
-                    public void onFailure(@NonNull Exception exception)
-                    {
-                        // Handle any errors
                     }
                 });
 
@@ -289,4 +267,195 @@ public class FirebaseWrapper
         return recyclerAdapter;
     }
 
+    public static FirebaseRecyclerAdapter getFriendsFirebaseRecyclerAdapter(final String userUid,
+                                                                             final RecyclerView recyclerView)
+    {
+        FirebaseRecyclerAdapter recyclerAdapter;
+
+        final String feedbackPath = "users/" + userUid + "/User Data/friends/";
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(feedbackPath)
+                .orderByKey();
+
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query, new SnapshotParser<User>()
+                        {
+                            @NonNull
+                            @Override
+                            public User parseSnapshot(@NonNull DataSnapshot snapshot)
+                            {
+                                //the logic isn't done here
+                                //due to clutter constraints
+                                User user = new User();
+                                user.uid = snapshot.getKey();
+                                return user;
+                            }
+                        })
+                        .build();
+
+
+        recyclerAdapter = new FirebaseRecyclerAdapter<User, FriendViewHolder>(options)
+        {
+            @Override
+            public FriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+            {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.friend_list_item, parent, false);
+
+                return new FriendViewHolder(view);
+            }
+
+
+            @Override
+            protected void onBindViewHolder(final FriendViewHolder holder, final int position, final User user)
+            {
+                holder.setFriendUid(user.uid);
+                holder.fillFriendViewHolder();
+
+                //go to user fragment
+                holder.root.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        //TODO: Go to user fragment
+                    }
+                });
+            }
+
+        };
+
+        recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
+        {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                recyclerView.smoothScrollToPosition(positionStart);
+            }
+        });
+
+
+        recyclerView.setAdapter(recyclerAdapter);
+        return recyclerAdapter;
+    }
+
+
+    public static FirebaseRecyclerAdapter getSearchFirebaseRecyclerAdapter(final RecyclerView recyclerView,
+                                                                           final String queryText)
+    {
+        FirebaseRecyclerAdapter recyclerAdapter;
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("users")
+                .orderByChild("User Data/fullname")
+                .startAt(queryText, "fullname")
+                .endAt(queryText +  "\uf8ff", "fullname");
+
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query, new SnapshotParser<User>()
+                        {
+                            @NonNull
+                            @Override
+                            public User parseSnapshot(@NonNull DataSnapshot snapshot)
+                            {
+                                Log.d("HELPME", "entering here");
+                                //the logic isn't done here
+                                //due to clutter constraints
+                                User user = new User();
+                                user.uid = snapshot.getKey();
+                                Log.d("HELPME", snapshot.getValue().toString());
+
+                                return user;
+                            }
+                        })
+                        .build();
+
+        recyclerAdapter = new FirebaseRecyclerAdapter<User, UserSearchViewHolder>(options)
+        {
+            @Override
+            public UserSearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+            {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.search_list_item, parent, false);
+
+                return new UserSearchViewHolder(view);
+            }
+
+
+            @Override
+            protected void onBindViewHolder(final UserSearchViewHolder holder, final int position, final User user)
+            {
+                holder.setUserUid(user.uid);
+                holder.fillUserSearchViewHolder();
+
+                //go to user fragment
+                holder.root.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        //TODO: Go to user fragment
+                    }
+                });
+            }
+
+        };
+        recyclerView.setAdapter(recyclerAdapter);
+        return recyclerAdapter;
+    }
+
+
+    public static void asyncSetAvatar (String userUid,
+                                      final ImageView imageView)
+    {
+        StorageReference photoRef = FirebaseStorage.getInstance()
+                                                    .getReference()
+                                                    .child(userUid);
+
+        photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        {
+            @Override
+            public void onSuccess(Uri uri)
+            {
+                GlideWrapper.setAvatarFromUri(imageView.getContext(), uri, imageView);
+            }
+        });
+    }
+
+    public static void sendFriendRequest (String userUid)
+    {
+
+    }
+
+    public static Feedback getFeedbackFromSnapshot(DataSnapshot snapshot)
+    {
+        Feedback feedback = new Feedback();
+
+        Object authorObj = snapshot.child("author").getValue();
+        Object textObj = snapshot.child("text").getValue();
+        Object impressionObj = snapshot.child("impression").getValue();
+        Object dateObj = snapshot.child("date/time").getValue();
+        Object authorUidObj = snapshot.child("authorUid").getValue();
+
+        //return default if one is null
+        if (authorObj == null ||
+                textObj == null || impressionObj == null ||
+                dateObj == null || authorUidObj == null)
+        {
+            return feedback;
+        }
+
+        feedback.author = authorObj.toString();
+        feedback.text = textObj.toString();
+        feedback.impression = impressionObj.toString();
+        long epochTimeMs = Long.parseLong(dateObj.toString());
+        feedback.date = new Date(epochTimeMs);
+        feedback.authorUid = authorUidObj.toString();
+
+        return feedback;
+    }
 }

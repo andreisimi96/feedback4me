@@ -65,7 +65,7 @@
                 android:id="@+id/change_profile_picture"
                 android:layout_width="match_parent"
                 android:layout_height="40sp"
-                android:drawableStart="@drawable/ic_requests"
+                android:drawableStart="@drawable/ic_camera_black_24dp"
                 android:drawablePadding="16dp"
                 android:gravity="center|start"
                 android:paddingLeft="32dp"
@@ -74,44 +74,33 @@
                 android:textColor="@color/colorAccent" />
 
             <Switch
-                android:id="@+id/allow_notifications"
-                android:layout_width="match_parent"
-                android:layout_height="40sp"
-                android:drawableStart="@drawable/ic_requests"
-                android:drawablePadding="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:text="@string/turn_on_notifications"
-                android:textColor="@color/colorAccent" />
-
-            <Switch
-                android:id="@+id/allow_feedback"
-                android:layout_width="match_parent"
-                android:layout_height="40sp"
-                android:drawableStart="@drawable/ic_requests"
-                android:drawablePadding="16dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
-                android:text="@string/allow_feedback_on_profile"
-                android:textColor="@color/colorAccent" />
-
-            <Switch
                 android:id="@+id/allow_anonymous_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="40sp"
+                android:drawableStart="@drawable/ic_anon_black_24dp"
+                android:drawablePadding="16dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/allow_anonymous_mode"
+                android:textColor="@color/colorAccent" />
+
+
+            <Switch
+                android:id="@+id/allow_only_friends"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
                 android:drawableStart="@drawable/ic_requests"
                 android:drawablePadding="16dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
-                android:text="@string/allow_anonymous_feedback_on_profile"
+                android:text="Allow Only Friends to Give Feedback"
                 android:textColor="@color/colorAccent" />
-
 
             <TextView
                 android:id="@+id/user_log_out"
                 android:layout_width="match_parent"
                 android:layout_height="40sp"
-                android:drawableStart="@drawable/ic_requests"
+                android:drawableStart="@drawable/ic_logoff_24dp"
                 android:drawablePadding="16dp"
                 android:gravity="center|start"
                 android:onClick="logOut"

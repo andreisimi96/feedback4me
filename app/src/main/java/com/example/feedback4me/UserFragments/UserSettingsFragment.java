@@ -69,9 +69,9 @@ public class UserSettingsFragment extends Fragment
 
     public void fillWithFirebaseData(View rootView)
     {
-        ImageView user_avatar = rootView.findViewById(R.id.user_avatar);
-        TextView user_name = rootView.findViewById(R.id.user_name_settings);
-        TextView user_email = rootView.findViewById(R.id.user_email_settings);
+        ImageView userAvatar = rootView.findViewById(R.id.user_avatar);
+        TextView userName = rootView.findViewById(R.id.user_name_settings);
+        TextView userEmail = rootView.findViewById(R.id.user_email_settings);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -81,10 +81,10 @@ public class UserSettingsFragment extends Fragment
             String email = user.getEmail();
             Uri photoUrl = user.getPhotoUrl();
 
-            user_name.setText(name);
-            user_email.setText(email);
-            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, user_avatar);
+            userName.setText(name);
+            userEmail.setText(email);
 
+            FirebaseWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
         else
         {

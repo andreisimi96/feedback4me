@@ -27,10 +27,10 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
     {
         super(itemView);
         root = itemView.findViewById(R.id.list_root);
-        authorImage = itemView.findViewById(R.id.list_feedback_author_photo);
-        feedbackAuthor = itemView.findViewById(R.id.list_feedback_author);
+        authorImage = itemView.findViewById(R.id.list_username_photo);
+        feedbackAuthor = itemView.findViewById(R.id.list_username);
         feedbackText = itemView.findViewById(R.id.list_feedback_text);
-        feedbackDate = itemView.findViewById(R.id.list_feedback_date);
+        feedbackDate = itemView.findViewById(R.id.list_birth_date);
     }
 
     public void setFeedbackAuthor(String string)
@@ -54,7 +54,6 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
     }
     public void setAuthorImage(Uri authorImageUri)
     {
-
         GlideWrapper.setAvatarFromUri(authorImage.getContext(), authorImageUri, authorImage);
     }
 }
