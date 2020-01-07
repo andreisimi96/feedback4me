@@ -190,7 +190,8 @@ public class FirebaseRequestsWrapper
                 .getReference()
                 .child(requestsPath);
 
-        usersDbReference.push().setValue(senderUid);
+        //simulate hashmap
+        usersDbReference.child(senderUid).setValue(senderUid);
     }
 
     public static void acceptFriendRequest (String senderUid, String receiverUid)
@@ -206,35 +207,19 @@ public class FirebaseRequestsWrapper
                 .getReference()
                 .child(receiverFriendsPath);
 
-        senderDbReference.push().setValue(receiverUid);
-        receiverDbReference.push().setValue(senderUid);
+        senderDbReference.child(receiverUid).setValue(receiverUid);
+        receiverDbReference.child(senderUid).setValue(senderUid);
+
+        deleteFriendRequest(senderUid, receiverUid);
     }
 
-    public static Feedback getFeedbackFromSnapshot(DataSnapshot snapshot)
+    public static void deleteFriendRequest(String senderUid, String receiverUid)
     {
-        Feedback feedback = new Feedback();
+        String senderRequestsPath = "users/" + receiverUid + "/User Data/requests/" + senderUid;
+        DatabaseReference senderDbReference = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(senderRequestsPath);
 
-        Object authorObj = snapshot.child("author").getValue();
-        Object textObj = snapshot.child("text").getValue();
-        Object impressionObj = snapshot.child("impression").getValue();
-        Object dateObj = snapshot.child("date/time").getValue();
-        Object authorUidObj = snapshot.child("authorUid").getValue();
-
-        //return default if one is null
-        if (authorObj == null ||
-                textObj == null || impressionObj == null ||
-                dateObj == null || authorUidObj == null)
-        {
-            return feedback;
-        }
-
-        feedback.author = authorObj.toString();
-        feedback.text = textObj.toString();
-        feedback.impression = impressionObj.toString();
-        long epochTimeMs = Long.parseLong(dateObj.toString());
-        feedback.date = new Date(epochTimeMs);
-        feedback.authorUid = authorUidObj.toString();
-
-        return feedback;
+        senderDbReference.removeValue();
     }
 }

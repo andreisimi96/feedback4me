@@ -24,6 +24,8 @@ import java.util.Calendar;
 
 public class FeedbackDialogFragment extends DialogFragment
 {
+    private String userUid;
+
     public FeedbackDialogFragment() {}
 
     public static FeedbackDialogFragment newInstance()
@@ -50,7 +52,7 @@ public class FeedbackDialogFragment extends DialogFragment
                         {
                             public void onClick(DialogInterface dialog, int whichButton)
                             {
-                                sendFeedbackToFirebase(view, FirebaseAuth.getInstance().getUid());
+                                sendFeedbackToFirebase(view, userUid);
                             }
                         }
                 )
@@ -104,5 +106,16 @@ public class FeedbackDialogFragment extends DialogFragment
         }
         feedback.date = Calendar.getInstance().getTime();
         FirebaseRequestsWrapper.sendFeedbackToFirebase(this, feedback, userUid);
+    }
+
+
+    public String getUserUid()
+    {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid)
+    {
+        this.userUid = userUid;
     }
 }

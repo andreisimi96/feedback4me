@@ -52,16 +52,7 @@ public class HomeFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         fillWithFirebaseData(rootView);
         attachClickHandlers(rootView);
-
-        recyclerView = rootView.findViewById(R.id.feedback_recyclerview);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(false);
-
-        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid(), recyclerView);
-        recyclerAdapter.startListening();
+        setupRecyclerAdapter(rootView);
 
         return rootView;
     }
@@ -74,7 +65,7 @@ public class HomeFragment extends Fragment
 
     }
 
-    public void fillWithFirebaseData(View rootView)
+    private void fillWithFirebaseData(View rootView)
     {
         ImageView userAvatar = rootView.findViewById(R.id.user_avatar_home);
         TextView userName = rootView.findViewById(R.id.user_name_home);
@@ -95,7 +86,7 @@ public class HomeFragment extends Fragment
 
     }
 
-    public void attachClickHandlers(View rootView)
+    private void attachClickHandlers(View rootView)
     {
         Button writeFeedback = rootView.findViewById(R.id.write_feedback);
         writeFeedback.setOnClickListener(new View.OnClickListener()
@@ -104,10 +95,34 @@ public class HomeFragment extends Fragment
             public void onClick(View v)
             {
                 // Create the fragment and show it as a dialog.
-                DialogFragment newFragment = FeedbackDialogFragment.newInstance();
+                FeedbackDialogFragment newFragment = FeedbackDialogFragment.newInstance();
+                newFragment.setUserUid(FirebaseAuth.getInstance().getUid());
                 newFragment.show(getFragmentManager(), "dialog");
             }
         });
+    }
+
+    private void setupRecyclerAdapter(View rootView)
+    {
+        recyclerView = rootView.findViewById(R.id.feedback_recyclerview);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(false);
+
+        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid());
+        recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
+        {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                recyclerView.smoothScrollToPosition(positionStart);
+            }
+        });
+
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.startListening();
     }
 
 }

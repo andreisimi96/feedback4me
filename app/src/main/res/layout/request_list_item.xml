@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
@@ -25,14 +25,13 @@
             android:id="@+id/list_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
             android:text="@string/username"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/list_username_photo"
-            app:layout_constraintTop_toTopOf="@+id/list_username_photo" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/list_username_photo" />
 
         <ImageView
             android:id="@+id/list_username_photo"
@@ -40,29 +39,58 @@
             android:layout_height="64dp"
             android:contentDescription="@string/username_photo"
             android:src="@drawable/ic_avatar_foreground"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/list_birth_date"
+            android:id="@+id/list_birthdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:text="@string/birth_date"
-            app:layout_constraintBottom_toBottomOf="@+id/list_username_photo"
-            app:layout_constraintStart_toEndOf="@+id/list_username_photo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_username" />
 
-        <Button
-            android:id="@+id/add_friend_button"
+        <ImageView
+            android:id="@+id/list_decline"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="Decline Swipe"
+            app:layout_constraintBottom_toTopOf="@+id/decline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_swipe_left_foreground" />
+
+        <ImageView
+            android:id="@+id/list_accept"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:contentDescription="Accept Swipe"
+            app:layout_constraintBottom_toTopOf="@+id/accept"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_swipe_right_foreground" />
+
+        <TextView
+            android:id="@+id/accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Friend"
-            android:textSize="10sp"
+            android:text="@string/accept"
+            android:textColor="@color/colorPrimaryDark"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/list_accept"
+            app:layout_constraintStart_toStartOf="@+id/list_accept" />
+
+        <TextView
+            android:id="@+id/decline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/decline"
+            android:textColor="@color/colorAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/list_decline"
+            app:layout_constraintStart_toStartOf="@+id/list_decline" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

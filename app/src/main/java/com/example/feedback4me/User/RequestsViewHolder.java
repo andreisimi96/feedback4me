@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,40 +17,35 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class FriendViewHolder extends RecyclerView.ViewHolder
+public class RequestsViewHolder extends RecyclerView.ViewHolder
 {
     public ConstraintLayout root;
-    private ImageView friendImage;
-    private ImageView anonymousImage;
+    private ImageView userImage;
     private TextView username;
     private TextView birthDate;
-    private String friendUid;
+    private String userUid;
     private DatabaseReference dbReference;
 
-    public FriendViewHolder(View itemView)
+    public RequestsViewHolder(View itemView)
     {
         super(itemView);
         root = itemView.findViewById(R.id.list_root);
-        friendImage = itemView.findViewById(R.id.list_username_photo);
         username = itemView.findViewById(R.id.list_username);
         birthDate = itemView.findViewById(R.id.list_birthdate);
-        anonymousImage = itemView.findViewById(R.id.list_anonymous_photo);
-
-
+        userImage = itemView.findViewById(R.id.list_username_photo);
     }
 
-    public void setFriendUid(String friendUid)
+    public void setUserUid(String userUid)
     {
-        this.friendUid = friendUid;
+        this.userUid = userUid;
     }
 
-    public void fillFriendViewHolder()
+    public void fillRequestsViewHolder()
     {
-
-        String userDataPath = "users/" + friendUid + "/User Data/";
+        String userDataPath = "users/" + userUid + "/User Data/";
         dbReference = FirebaseDatabase.getInstance()
-                            .getReference()
-                            .child(userDataPath);
+                .getReference()
+                .child(userDataPath);
         Log.d("FriendViewHolder", "I reach here");
         ValueEventListener postListener = new ValueEventListener()
         {
@@ -59,15 +55,9 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.fullname);
                 birthDate.setText(user.birthdate);
-                if (user.allowsAnonymousFeedback)
-                {
-                    anonymousImage.setVisibility(View.VISIBLE);
-                }
-                FirebaseRequestsWrapper.asyncSetAvatar(friendUid, friendImage);
 
-                /*
-                TODO go to User Page
-                 */
+                FirebaseRequestsWrapper.asyncSetAvatar(userUid, userImage);
+
             }
 
             @Override
@@ -79,8 +69,11 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
             }
         };
 
-
-
         dbReference.addValueEventListener(postListener);
+    }
+
+    public String getUserUid()
+    {
+        return userUid;
     }
 }

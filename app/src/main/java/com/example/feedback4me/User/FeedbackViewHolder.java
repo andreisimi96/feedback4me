@@ -30,7 +30,7 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
         authorImage = itemView.findViewById(R.id.list_username_photo);
         feedbackAuthor = itemView.findViewById(R.id.list_username);
         feedbackText = itemView.findViewById(R.id.list_feedback_text);
-        feedbackDate = itemView.findViewById(R.id.list_birth_date);
+        feedbackDate = itemView.findViewById(R.id.list_birthdate);
     }
 
     public void setFeedbackAuthor(String string)

@@ -10,16 +10,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
+import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
 import com.example.feedback4me.Tools.GlideWrapper;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class UserFragment extends Fragment
 {
+    private String userUid;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
+    private FirebaseRecyclerAdapter recyclerAdapter;
 
     public UserFragment() {}
 
@@ -43,36 +52,19 @@ public class UserFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_user, container, false);
         fillWithFirebaseData(rootView);
         attachClickHandlers(rootView);
+        setupRecyclerAdapter(rootView);
 
         return rootView;
     }
 
-    public void fillWithFirebaseData(View rootView)
+    private void fillWithFirebaseData(View rootView)
     {
-        ImageView userAvatar = rootView.findViewById(R.id.user_avatar_home);
-        TextView userName = rootView.findViewById(R.id.user_name_home);
-
         /*
-         TODO Make real one, not placeholder
+        TODO
          */
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null)
-        {
-            // Name, email address, and profile photo Url
-            String name = user.getDisplayName();
-            Uri photoUrl = user.getPhotoUrl();
-
-            userName.setText(name);
-
-            GlideWrapper.setAvatarFromUri(getContext(), photoUrl, userAvatar);
-        }
-        else
-        {
-            startActivity(new Intent(getActivity(), LoginActivity.class));
-        }
     }
 
-    public void attachClickHandlers(View rootView)
+    private void attachClickHandlers(View rootView)
     {
         Button writeFeedback = rootView.findViewById(R.id.write_feedback);
         writeFeedback.setOnClickListener(new View.OnClickListener()
@@ -80,8 +72,43 @@ public class UserFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                
+                FeedbackDialogFragment newFragment = FeedbackDialogFragment.newInstance();
+                newFragment.setUserUid(userUid);
+                newFragment.show(getFragmentManager(), "dialog");
             }
         });
+    }
+
+    private void setupRecyclerAdapter(View rootView)
+    {
+        recyclerView = rootView.findViewById(R.id.feedback_recyclerview);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(false);
+
+        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(userUid);
+        recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
+        {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount)
+            {
+                recyclerView.smoothScrollToPosition(positionStart);
+            }
+        });
+
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.startListening();
+    }
+
+    public String getUserUid()
+    {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid)
+    {
+        this.userUid = userUid;
     }
 }

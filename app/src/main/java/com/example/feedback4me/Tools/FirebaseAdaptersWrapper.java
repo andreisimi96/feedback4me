@@ -1,5 +1,6 @@
 package com.example.feedback4me.Tools;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,12 +10,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.User.Feedback;
 import com.example.feedback4me.User.FeedbackViewHolder;
 import com.example.feedback4me.User.FriendViewHolder;
+import com.example.feedback4me.User.RequestsViewHolder;
 import com.example.feedback4me.User.User;
 import com.example.feedback4me.User.UserSearchViewHolder;
+import com.example.feedback4me.UserFragments.UserFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.firebase.ui.database.SnapshotParser;
@@ -27,8 +31,7 @@ import com.google.firebase.storage.StorageReference;
 
 public class FirebaseAdaptersWrapper
 {
-    public static FirebaseRecyclerAdapter getFeedbackFirebaseRecyclerAdapter(final String userUid,
-                                                                             final RecyclerView recyclerView)
+    public static FirebaseRecyclerAdapter getFeedbackFirebaseRecyclerAdapter(final String userUid)
     {
         FirebaseRecyclerAdapter recyclerAdapter;
 
@@ -100,22 +103,10 @@ public class FirebaseAdaptersWrapper
 
         };
 
-        recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
-        {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount)
-            {
-                recyclerView.smoothScrollToPosition(positionStart);
-            }
-        });
-
-
-        recyclerView.setAdapter(recyclerAdapter);
         return recyclerAdapter;
     }
 
-    public static FirebaseRecyclerAdapter getFriendsFirebaseRecyclerAdapter(final String userUid,
-                                                                            final RecyclerView recyclerView)
+    public static FirebaseRecyclerAdapter getFriendsFirebaseRecyclerAdapter(final String userUid)
     {
         FirebaseRecyclerAdapter recyclerAdapter;
 
@@ -136,7 +127,7 @@ public class FirebaseAdaptersWrapper
                                 //the logic isn't done here
                                 //due to clutter constraints
                                 User user = new User();
-                                user.uid = snapshot.getKey();
+                                user.uid = snapshot.getValue().toString();
                                 return user;
                             }
                         })
@@ -174,23 +165,76 @@ public class FirebaseAdaptersWrapper
 
         };
 
-        recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
-        {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount)
-            {
-                recyclerView.smoothScrollToPosition(positionStart);
-            }
-        });
-
-
-        recyclerView.setAdapter(recyclerAdapter);
         return recyclerAdapter;
     }
 
+    public static FirebaseRecyclerAdapter getRequestsFirebaseRecyclerAdapter(final String userUid)
+    {
 
-    public static FirebaseRecyclerAdapter getSearchFirebaseRecyclerAdapter(final RecyclerView recyclerView,
-                                                                           final String queryText)
+        FirebaseRecyclerAdapter recyclerAdapter;
+
+        final String feedbackPath = "users/" + userUid + "/User Data/requests/";
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(feedbackPath)
+                .orderByKey();
+
+        FirebaseRecyclerOptions<User> options =
+                new FirebaseRecyclerOptions.Builder<User>()
+                        .setQuery(query, new SnapshotParser<User>()
+                        {
+                            @NonNull
+                            @Override
+                            public User parseSnapshot(@NonNull DataSnapshot snapshot)
+                            {
+                                //the logic isn't done here
+                                //due to clutter constraints
+                                String userUid = snapshot.getValue().toString();
+                                Log.d("REQUESTS", userUid);
+                                User user = new User();
+                                user.uid = userUid;
+                                return user;
+                            }
+                        })
+                        .build();
+
+
+        recyclerAdapter = new FirebaseRecyclerAdapter<User, RequestsViewHolder>(options)
+        {
+            @Override
+            public RequestsViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+            {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.request_list_item, parent, false);
+
+                return new RequestsViewHolder(view);
+            }
+
+
+            @Override
+            protected void onBindViewHolder(final RequestsViewHolder holder, final int position, final User user)
+            {
+                holder.setUserUid(user.uid);
+                holder.fillRequestsViewHolder();
+
+                //go to user fragment
+                holder.root.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        //TODO: Go to user fragment
+                    }
+                });
+            }
+
+        };
+
+        return recyclerAdapter;
+    }
+
+    public static FirebaseRecyclerAdapter getSearchFirebaseRecyclerAdapter(final Activity callingActivity,
+                                                                            final String queryText)
     {
         FirebaseRecyclerAdapter recyclerAdapter;
 
@@ -244,15 +288,14 @@ public class FirebaseAdaptersWrapper
                     @Override
                     public void onClick(View v)
                     {
-                        //TODO: Go to user fragment
+                        MainActivity castedCallingActivity = ((MainActivity)callingActivity);
+                        castedCallingActivity.openNavigationFragment(UserFragment.newInstance());
                     }
                 });
             }
 
         };
-        recyclerView.setAdapter(recyclerAdapter);
         return recyclerAdapter;
     }
-
 
 }

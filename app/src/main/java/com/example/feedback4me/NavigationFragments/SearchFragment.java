@@ -45,14 +45,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         SearchView userSearchview = rootView.findViewById(R.id.user_searchview);
         userSearchview.setOnQueryTextListener(this);
 
-        recyclerView = rootView.findViewById(R.id.user_recyclerview);
+        recyclerView = rootView.findViewById(R.id.users_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, "");
+        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(getActivity(), "");
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.startListening();
 
@@ -70,7 +70,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     public boolean onQueryTextChange(String newText)
     {
         recyclerAdapter.stopListening();
-        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(recyclerView, newText);
+        recyclerAdapter = FirebaseAdaptersWrapper.getSearchFirebaseRecyclerAdapter(getActivity(), newText);
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.startListening();
         return false;

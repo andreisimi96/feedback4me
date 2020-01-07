@@ -36,7 +36,7 @@ public class UserSearchViewHolder extends RecyclerView.ViewHolder
         userImage = itemView.findViewById(R.id.list_username_photo);
         addFriend = itemView.findViewById(R.id.add_friend_button);
         username = itemView.findViewById(R.id.list_username);
-        birthDate = itemView.findViewById(R.id.list_birth_date);
+        birthDate = itemView.findViewById(R.id.list_birthdate);
 
     }
 
