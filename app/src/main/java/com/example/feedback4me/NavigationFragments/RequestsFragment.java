@@ -53,7 +53,7 @@ public class RequestsFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseAdaptersWrapper.getRequestsFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid());
+        recyclerAdapter = FirebaseAdaptersWrapper.getRequestsFirebaseRecyclerAdapter(getActivity(), FirebaseAuth.getInstance().getUid());
         recyclerView.setAdapter(recyclerAdapter);
         attachSwipeBehavior(recyclerView);
 

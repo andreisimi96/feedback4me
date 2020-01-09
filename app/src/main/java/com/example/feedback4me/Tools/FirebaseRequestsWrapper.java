@@ -1,8 +1,11 @@
 package com.example.feedback4me.Tools;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -12,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import com.example.feedback4me.MainActivity;
 import com.example.feedback4me.User.Feedback;
 import com.example.feedback4me.User.User;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,14 +25,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +43,7 @@ public class FirebaseRequestsWrapper
                                                       final String fullname,
                                                       final String birthdate)
     {
-        final ProgressDialog progress = UI.createProgressDialog(callingFragment.getContext(),
+        final ProgressDialog progress = UIHelpers.createProgressDialog(callingFragment.getContext(),
                                                 "Loading", "Configuring your account...", false);
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -92,16 +95,38 @@ public class FirebaseRequestsWrapper
                 });
     }
 
-    public static void createUserDBForGoogleSignin(final Fragment callingFragment)
+    //called only the first time someone logs in with google
+    public static void createUserDBForGoogleSignin(final Activity callingActivity)
     {
-        /*
-        TODO
-         */
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(callingActivity);
+        Log.d("OMG", "hehe");
+        if (account != null)
+        {
+            Log.d("OMG", "hehe2");
+            String name = account.getDisplayName();
+            String email = account.getEmail();
+            Uri avatarUri = account.getPhotoUrl();
+            Log.d("OMG", email);
+            Log.d("OMG", name);
+            Log.d("OMG", avatarUri.toString());
+
+            FirebaseUser firebaseUser =  FirebaseAuth.getInstance().getCurrentUser();
+
+            String userUid = firebaseUser.getUid();
+            DatabaseReference usersDbReference = FirebaseDatabase.getInstance().getReference();
+            User user = new User(name, email, "Missing Birthdate", userUid, null);
+            usersDbReference = usersDbReference.child("users/" + userUid);
+
+            Map<String, User> userData = new HashMap<>();
+            userData.put("User Data", user);
+            usersDbReference.setValue(userData);
+
+        }
     }
 
-    public static void changeUserAvatar(final Fragment callingFragment, final Uri newAvatarUri)
+    public static void changeUserAvatar(final Context callingContext, final Uri newAvatarUri)
     {
-        final ProgressDialog progress = UI.createProgressDialog(callingFragment.getContext(),
+        final ProgressDialog progress = UIHelpers.createProgressDialog(callingContext,
                                         "Loading", "Adding profile picture...", false);
 
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -115,7 +140,7 @@ public class FirebaseRequestsWrapper
             @Override
             public void onFailure(@NonNull Exception exception)
             {
-                Toast.makeText(callingFragment.getContext(),
+                Toast.makeText(callingContext,
                         "An error occured. Can't upload new profile picture.",
                             Toast.LENGTH_LONG).show();
                 progress.dismiss();
@@ -139,7 +164,7 @@ public class FirebaseRequestsWrapper
                                     String photoUrl = firebaseUser.getPhotoUrl().toString();
                                     DatabaseReference avatarReference = FirebaseDatabase.getInstance()
                                                                         .getReference()
-                                                                        .child("users/" + userUid + "/User Data/avatarUid");
+                                                                        .child("users/" + userUid + "/User Data/avatarUri");
                                     avatarReference.setValue(photoUrl);
                                     progress.dismiss();
                                 }
@@ -151,8 +176,7 @@ public class FirebaseRequestsWrapper
 
     }
 
-    public static void sendFeedbackToFirebase(final Fragment callingFragment,
-                                              final Feedback feedback,
+    public static void sendFeedbackToFirebase(final Feedback feedback,
                                               final String userUid)
     {
         String feedbackPath = "users/" + userUid + "/User Feedback/";

@@ -1,11 +1,13 @@
 package com.example.feedback4me.User;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.feedback4me.R;
@@ -19,6 +21,7 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
 {
     public ConstraintLayout root;
     public ImageView authorImage;
+    public ImageView impressionPic;
     public TextView feedbackAuthor;
     public TextView feedbackText;
     public TextView feedbackDate;
@@ -31,6 +34,7 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
         feedbackAuthor = itemView.findViewById(R.id.list_username);
         feedbackText = itemView.findViewById(R.id.list_feedback_text);
         feedbackDate = itemView.findViewById(R.id.list_birthdate);
+        impressionPic = itemView.findViewById(R.id.list_impression);
     }
 
     public void setFeedbackAuthor(String string)
@@ -55,5 +59,22 @@ public class FeedbackViewHolder extends RecyclerView.ViewHolder
     public void setAuthorImage(Uri authorImageUri)
     {
         GlideWrapper.setAvatarFromUri(authorImage.getContext(), authorImageUri, authorImage);
+    }
+
+    public void setImpression(String impression)
+    {
+        Context context = impressionPic.getContext();
+        switch (impression)
+        {
+            case "Negative":
+                impressionPic.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_thumbs_down_foreground));
+                break;
+            case "Neutral":
+                impressionPic.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_thumbs_up_down_foreground));
+                break;
+            case "Positive":
+                impressionPic.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_thumbs_up_foreground));
+                break;
+        }
     }
 }

@@ -58,7 +58,7 @@ public class UserSettingsFragment extends Fragment
                 Uri newAvatarUri = data.getData();
                 if (newAvatarUri != null)
                 {
-                    FirebaseRequestsWrapper.changeUserAvatar(this, newAvatarUri);
+                    FirebaseRequestsWrapper.changeUserAvatar(getContext(), newAvatarUri);
                 }
             }
         }
@@ -76,7 +76,6 @@ public class UserSettingsFragment extends Fragment
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
             String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
 
             userName.setText(name);
             userEmail.setText(email);

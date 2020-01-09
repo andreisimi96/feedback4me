@@ -1,8 +1,7 @@
 package com.example.feedback4me.UserFragments;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,18 +9,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
-import com.example.feedback4me.Tools.GlideWrapper;
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
+import com.example.feedback4me.User.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class UserFragment extends Fragment
 {
@@ -29,6 +30,7 @@ public class UserFragment extends Fragment
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter recyclerAdapter;
+
 
     public UserFragment() {}
 
@@ -59,9 +61,39 @@ public class UserFragment extends Fragment
 
     private void fillWithFirebaseData(View rootView)
     {
-        /*
-        TODO
-         */
+        final ImageView userAvatar = rootView.findViewById(R.id.user_avatar);
+        final TextView username = rootView.findViewById(R.id.user_name);
+        final TextView birthdate = rootView.findViewById(R.id.user_birthdate);
+
+        String userDataPath = "users/" + userUid + "/User Data/";
+        DatabaseReference dbReference = FirebaseDatabase.getInstance()
+                                                        .getReference()
+                                                        .child(userDataPath);
+        ValueEventListener postListener = new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                User user = dataSnapshot.getValue(User.class);
+
+                if (user.fullname != null && user.birthdate != null)
+                {
+                    username.setText(user.fullname);
+                    birthdate.setText(user.birthdate);
+                }
+                FirebaseRequestsWrapper.asyncSetAvatar(userUid, userAvatar);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                // Getting Post failed, log a message
+                Log.w("Error", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        dbReference.addValueEventListener(postListener);
+
     }
 
     private void attachClickHandlers(View rootView)
@@ -88,7 +120,7 @@ public class UserFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(userUid);
+        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(getActivity(), userUid);
         recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
         {
             @Override

@@ -16,6 +16,7 @@ import com.example.feedback4me.NavigationFragments.HomeFragment;
 import com.example.feedback4me.NavigationFragments.RequestsFragment;
 import com.example.feedback4me.NavigationFragments.SearchFragment;
 import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
+import com.example.feedback4me.User.Notifications;
 import com.example.feedback4me.UserFragments.UserSettingsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -158,4 +159,6 @@ public class MainActivity extends AppCompatActivity
             FirebaseRequestsWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
     }
+
+
 }

@@ -19,6 +19,7 @@ import com.example.feedback4me.LoginActivity;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.FirebaseAdaptersWrapper;
 import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
+import com.example.feedback4me.User.Notifications;
 import com.example.feedback4me.UserFragments.FeedbackDialogFragment;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +30,8 @@ public class HomeFragment extends Fragment
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private FirebaseRecyclerAdapter recyclerAdapter;
+
+    private Notifications notifications;
 
     public HomeFragment() {}
 
@@ -68,7 +71,7 @@ public class HomeFragment extends Fragment
     private void fillWithFirebaseData(View rootView)
     {
         ImageView userAvatar = rootView.findViewById(R.id.user_avatar_home);
-        TextView userName = rootView.findViewById(R.id.user_name_home);
+        TextView username = rootView.findViewById(R.id.user_name_home);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null)
@@ -76,7 +79,7 @@ public class HomeFragment extends Fragment
             // Name, email address, and profile photo Url
             String name = user.getDisplayName();
 
-            userName.setText(name);
+            username.setText(name);
             FirebaseRequestsWrapper.asyncSetAvatar(user.getUid(), userAvatar);
         }
         else
@@ -111,7 +114,7 @@ public class HomeFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid());
+        recyclerAdapter = FirebaseAdaptersWrapper.getFeedbackFirebaseRecyclerAdapter(getActivity(), FirebaseAuth.getInstance().getUid());
         recyclerAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver()
         {
             @Override

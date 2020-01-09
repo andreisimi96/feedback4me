@@ -31,7 +31,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class FirebaseAdaptersWrapper
 {
-    public static FirebaseRecyclerAdapter getFeedbackFirebaseRecyclerAdapter(final String userUid)
+    public static FirebaseRecyclerAdapter getFeedbackFirebaseRecyclerAdapter(final Activity callingActivity,
+                                                                             final String userUid)
     {
         FirebaseRecyclerAdapter recyclerAdapter;
 
@@ -72,7 +73,7 @@ public class FirebaseAdaptersWrapper
                 holder.setFeedbackAuthor(feedback.author);
                 holder.setFeedbackText(feedback.text);
                 holder.setFeedbackDate(feedback.date);
-
+                holder.setImpression(feedback.impression);
 
                 //setup feedback profile image
                 FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -90,15 +91,22 @@ public class FirebaseAdaptersWrapper
                 });
 
 
-                //go to user fragment
-                holder.root.setOnClickListener(new View.OnClickListener()
+
+
+                if (feedback.authorUid != "Anonymous")
                 {
-                    @Override
-                    public void onClick(View v)
+                    holder.root.setOnClickListener(new View.OnClickListener()
                     {
-                        //TODO: Go to user fragment
-                    }
-                });
+                        @Override
+                        public void onClick(View v)
+                        {
+                            MainActivity castedCallingActivity = ((MainActivity) callingActivity);
+                            UserFragment userFragment = UserFragment.newInstance();
+                            userFragment.setUserUid(feedback.authorUid);
+                            castedCallingActivity.openNavigationFragment(userFragment);
+                        }
+                    });
+                }
             }
 
         };
@@ -106,7 +114,8 @@ public class FirebaseAdaptersWrapper
         return recyclerAdapter;
     }
 
-    public static FirebaseRecyclerAdapter getFriendsFirebaseRecyclerAdapter(final String userUid)
+    public static FirebaseRecyclerAdapter getFriendsFirebaseRecyclerAdapter(final Activity callingActivity,
+                                                                            final String userUid)
     {
         FirebaseRecyclerAdapter recyclerAdapter;
 
@@ -152,13 +161,15 @@ public class FirebaseAdaptersWrapper
                 holder.setFriendUid(user.uid);
                 holder.fillFriendViewHolder();
 
-                //go to user fragment
                 holder.root.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        //TODO: Go to user fragment
+                        MainActivity castedCallingActivity = ((MainActivity)callingActivity);
+                        UserFragment userFragment = UserFragment.newInstance();
+                        userFragment.setUserUid(user.uid);
+                        castedCallingActivity.openNavigationFragment(userFragment);
                     }
                 });
             }
@@ -168,7 +179,8 @@ public class FirebaseAdaptersWrapper
         return recyclerAdapter;
     }
 
-    public static FirebaseRecyclerAdapter getRequestsFirebaseRecyclerAdapter(final String userUid)
+    public static FirebaseRecyclerAdapter getRequestsFirebaseRecyclerAdapter(final Activity callingActivity,
+                                                                             final String userUid)
     {
 
         FirebaseRecyclerAdapter recyclerAdapter;
@@ -217,13 +229,15 @@ public class FirebaseAdaptersWrapper
                 holder.setUserUid(user.uid);
                 holder.fillRequestsViewHolder();
 
-                //go to user fragment
                 holder.root.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View v)
                     {
-                        //TODO: Go to user fragment
+                        MainActivity castedCallingActivity = ((MainActivity)callingActivity);
+                        UserFragment userFragment = UserFragment.newInstance();
+                        userFragment.setUserUid(user.uid);
+                        castedCallingActivity.openNavigationFragment(userFragment);
                     }
                 });
             }
@@ -289,7 +303,9 @@ public class FirebaseAdaptersWrapper
                     public void onClick(View v)
                     {
                         MainActivity castedCallingActivity = ((MainActivity)callingActivity);
-                        castedCallingActivity.openNavigationFragment(UserFragment.newInstance());
+                        UserFragment userFragment = UserFragment.newInstance();
+                        userFragment.setUserUid(user.uid);
+                        castedCallingActivity.openNavigationFragment(userFragment);
                     }
                 });
             }

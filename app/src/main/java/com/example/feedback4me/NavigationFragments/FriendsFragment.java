@@ -49,7 +49,7 @@ public class FriendsFragment extends Fragment
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(false);
 
-        recyclerAdapter = FirebaseAdaptersWrapper.getFriendsFirebaseRecyclerAdapter(FirebaseAuth.getInstance().getUid());
+        recyclerAdapter = FirebaseAdaptersWrapper.getFriendsFirebaseRecyclerAdapter(getActivity(), FirebaseAuth.getInstance().getUid());
 
         recyclerView.setAdapter(recyclerAdapter);
         recyclerAdapter.startListening();

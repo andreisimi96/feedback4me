@@ -36,4 +36,9 @@
     <string name="username_photo">Username Photo</string>
     <string name="accept">Accept</string>
     <string name="decline">Decline</string>
+    <string name="impression_photo">Impression Photo</string>
+    <string name="author_photo">Author Photo</string>
+    <string name="author">Author</string>
+    <string name="feedback_text">Feedback text</string>
+    <string name="date">Date</string>
 </resources>

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.example.feedback4me.UserFragments.SignUpFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -155,6 +157,7 @@ public class LoginActivity extends AppCompatActivity
     {
         Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
 
+        final Activity thisActivity = this;
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -167,8 +170,10 @@ public class LoginActivity extends AppCompatActivity
                             Log.d(TAG, "signInWithCredential:success");
 
                             boolean isNew = task.getResult().getAdditionalUserInfo().isNewUser();
-
-                            //TODO: Add entry when user is new via google
+                            if (isNew)
+                            {
+                                FirebaseRequestsWrapper.createUserDBForGoogleSignin(thisActivity);
+                            }
 
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                             updateUI(firebaseUser);

@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +21,7 @@ public class RequestsViewHolder extends RecyclerView.ViewHolder
     public ConstraintLayout root;
     private ImageView userImage;
     private TextView username;
-    private TextView birthDate;
+    private TextView birthdate;
     private String userUid;
     private DatabaseReference dbReference;
 
@@ -31,7 +30,7 @@ public class RequestsViewHolder extends RecyclerView.ViewHolder
         super(itemView);
         root = itemView.findViewById(R.id.list_root);
         username = itemView.findViewById(R.id.list_username);
-        birthDate = itemView.findViewById(R.id.list_birthdate);
+        birthdate = itemView.findViewById(R.id.list_birthdate);
         userImage = itemView.findViewById(R.id.list_username_photo);
     }
 
@@ -54,10 +53,9 @@ public class RequestsViewHolder extends RecyclerView.ViewHolder
             {
                 User user = dataSnapshot.getValue(User.class);
                 username.setText(user.fullname);
-                birthDate.setText(user.birthdate);
+                birthdate.setText(user.birthdate);
 
                 FirebaseRequestsWrapper.asyncSetAvatar(userUid, userImage);
-
             }
 
             @Override

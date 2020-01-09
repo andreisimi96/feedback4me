@@ -105,7 +105,7 @@ public class FeedbackDialogFragment extends DialogFragment
             feedback.authorUid = FirebaseAuth.getInstance().getUid();
         }
         feedback.date = Calendar.getInstance().getTime();
-        FirebaseRequestsWrapper.sendFeedbackToFirebase(this, feedback, userUid);
+        FirebaseRequestsWrapper.sendFeedbackToFirebase(feedback, userUid);
     }
 
 
