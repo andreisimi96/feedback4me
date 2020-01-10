@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -17,7 +18,14 @@ import android.widget.Switch;
 import com.example.feedback4me.R;
 import com.example.feedback4me.Tools.FirebaseRequestsWrapper;
 import com.example.feedback4me.User.Feedback;
+import com.example.feedback4me.User.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
@@ -73,12 +81,42 @@ public class FeedbackDialogFragment extends DialogFragment
         feedbackDialog.getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
 
 
+        //check if user allows anonymous feedback
+        final Switch anonymousSwitch = view.findViewById(R.id.feedback_type);
+        String userDataPath = "users/" + userUid + "/User Data/";
+        DatabaseReference dbReference = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(userDataPath);
+        ValueEventListener postListener = new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                User user = dataSnapshot.getValue(User.class);
+                if (!user.allowsAnonymousFeedback)
+                {
+                    anonymousSwitch.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                // Getting Post failed, log a message
+                Log.w("Error", "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        dbReference.addValueEventListener(postListener);
+
+
+
         return feedbackDialog;
     }
 
     public void sendFeedbackToFirebase(View view, String userUid)
     {
-        Switch anonymousSwitch = view.findViewById(R.id.feedback_type);
+        final Switch anonymousSwitch = view.findViewById(R.id.feedback_type);
 
         RadioGroup radioGroup = view.findViewById(R.id.feedback_impression);
         int radioButtonID = radioGroup.getCheckedRadioButtonId();

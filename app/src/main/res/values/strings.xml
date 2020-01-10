@@ -12,7 +12,7 @@
     <string name="user_profile_picture">User Profile Picture</string>
     <string name="turn_on_notifications">Turn On Notifications</string>
     <string name="allow_feedback_on_profile">Allow Feedback on Profile</string>
-    <string name="allow_anonymous_mode">Anonymous Mode</string>
+    <string name="allow_anonymous_mode">Allow Anonymous Mode Feedback</string>
     <string name="log_out">Log Out</string>
     <string name="home">Home</string>
     <string name="friends">Friends</string>
@@ -23,14 +23,12 @@
     <string name="sign_up">Sign Up!</string>
     <string name="birth_date">Birth Date</string>
     <string name="user_avatar">User Avatar</string>
-    <string name="enter_feedback_for_user">Enter your feedback for user</string>
+    <string name="enter_feedback_for_user">Enter your feedback</string>
     <string name="anonymous">Anonymous</string>
     <string name="enter_your_feedback">Enter your feedback</string>
     <string name="negative">Negative</string>
     <string name="neutral">Neutral</string>
     <string name="positive">Positive</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="write_feedback">Write Feedback</string>
     <string name="username_photo">Username Photo</string>
@@ -41,4 +39,5 @@
     <string name="author">Author</string>
     <string name="feedback_text">Feedback text</string>
     <string name="date">Date</string>
+    <string name="change_birth_date">Change Birth Date</string>
 </resources>

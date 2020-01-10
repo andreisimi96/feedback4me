@@ -161,12 +161,20 @@ public class FirebaseRequestsWrapper
                             {
                                 if (task.isSuccessful())
                                 {
-                                    String photoUrl = firebaseUser.getPhotoUrl().toString();
+                                    //Commented because avatar has hardcoded path
+                                    /*String photoUrl = firebaseUser.getPhotoUrl().toString();
                                     DatabaseReference avatarReference = FirebaseDatabase.getInstance()
                                                                         .getReference()
                                                                         .child("users/" + userUid + "/User Data/avatarUri");
-                                    avatarReference.setValue(photoUrl);
+                                    avatarReference.setValue(photoUrl);*/
                                     progress.dismiss();
+
+                                    /*
+                                        Refresh entire view
+                                     */
+                                    Intent intent = ((Activity)callingContext).getIntent();
+                                    ((Activity)callingContext).finish();
+                                    ((Activity)callingContext).startActivity(intent);
                                 }
                             }
                         });
@@ -193,19 +201,30 @@ public class FirebaseRequestsWrapper
     public static void asyncSetAvatar (String userUid,
                                       final ImageView imageView)
     {
-        StorageReference photoRef = FirebaseStorage.getInstance()
-                                                    .getReference()
-                                                    .child(userUid);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+        //don't do a *heavy* lookup in the storage for currently logged in user
+        if (userUid == firebaseUser.getUid())
         {
-            @Override
-            public void onSuccess(Uri uri)
+            GlideWrapper.setAvatarFromUri(imageView.getContext(), firebaseUser.getPhotoUrl(), imageView);
+        }
+        else
+        {
+            StorageReference photoRef = FirebaseStorage.getInstance()
+                    .getReference()
+                    .child(userUid);
+            photoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
             {
-                GlideWrapper.setAvatarFromUri(imageView.getContext(), uri, imageView);
-            }
-        });
+                @Override
+                public void onSuccess(Uri uri)
+                {
+                    GlideWrapper.setAvatarFromUri(imageView.getContext(), uri, imageView);
+                }
+            });
+        }
     }
+
+
 
     public static void sendFriendRequest (String senderUid, String receiverUid)
     {
@@ -246,4 +265,5 @@ public class FirebaseRequestsWrapper
 
         senderDbReference.removeValue();
     }
+
 }

@@ -73,6 +73,19 @@
                 android:text="@string/change_profile_picture"
                 android:textColor="@color/colorAccent" />
 
+            <TextView
+                android:id="@+id/change_birth_date"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:drawableStart="@drawable/ic_home"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/change_birth_date"
+                android:visibility="gone"
+                android:textColor="@color/colorAccent" />
+
             <Switch
                 android:id="@+id/allow_anonymous_feedback"
                 android:layout_width="match_parent"

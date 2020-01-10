@@ -71,11 +71,6 @@ public class UserSearchViewHolder extends RecyclerView.ViewHolder
                 {
                     addFriend.setVisibility(View.GONE);
                 }
-
-
-                /*
-                TODO
-                 */
             }
 
             @Override

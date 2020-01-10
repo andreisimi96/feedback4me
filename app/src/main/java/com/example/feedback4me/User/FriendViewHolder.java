@@ -64,10 +64,6 @@ public class FriendViewHolder extends RecyclerView.ViewHolder
                     anonymousImage.setVisibility(View.VISIBLE);
                 }
                 FirebaseRequestsWrapper.asyncSetAvatar(friendUid, friendImage);
-
-                /*
-                TODO go to User Page
-                 */
             }
 
             @Override
